@@ -34,5 +34,3 @@ This repository provides an example of how to use a customized API model within 
 
 - [OpenCompass GitHub Repository](https://github.com/open-compass/opencompass): OpenCompass is an LLM evaluation platform supporting a wide range of models (Llama3, Mistral, InternLM2, GPT-4, LLaMa2, Qwen, GLM, Claude, etc.) across 100+ datasets.
 - [OpenCompass Documentation](https://opencompass.readthedocs.io/en/latest/): Comprehensive documentation for OpenCompass 0.5.0.
-
-Feel free to reach out for any questions or contributions!5.0 documentation](https://opencompass.readthedocs.io/en/latest/)
