@@ -165,19 +165,19 @@ class MyModelAPI(BaseAPIModel):
         """
         assert isinstance(input, (str, PromptList))
 
-        # max num token for gpt-3.5-turbo is 4097
-        context_window = 32768
-        # if '32k' in self.path:
-        #     context_window = 32768
-        # elif '16k' in self.path:
-        #     context_window = 16384
-        # elif 'gpt-4' in self.path:
-        #     context_window = 8192
+        # # max num token for gpt-3.5-turbo is 4097
+        # context_window = 32768
+        # # if '32k' in self.path:
+        # #     context_window = 32768
+        # # elif '16k' in self.path:
+        # #     context_window = 16384
+        # # elif 'gpt-4' in self.path:
+        # #     context_window = 8192
 
-        # will leave 100 tokens as prompt buffer, triggered if input is str
-        if isinstance(input, str) and self.mode != 'none':
-            context_window = self.max_seq_len
-            input = self.bin_trim(input, context_window - 100 - max_out_len)
+        # # will leave 100 tokens as prompt buffer, triggered if input is str
+        # if isinstance(input, str) and self.mode != 'none':
+        #     context_window = self.max_seq_len
+        #     input = self.bin_trim(input, context_window - 100 - max_out_len)
 
         if isinstance(input, str):
             messages = [{'role': 'user', 'content': input}]
@@ -193,18 +193,20 @@ class MyModelAPI(BaseAPIModel):
                     msg['role'] = 'system'
                 messages.append(msg)
 
-        # Hold out 100 tokens due to potential errors in tiktoken calculation
-        try:
-            max_out_len = min(
-                max_out_len,
-                context_window - self.get_token_len(str(input)) - 100)
-        except KeyError:
-            max_out_len = max_out_len
-        if max_out_len <= 0:
-            return ''
+        # # Hold out 100 tokens due to potential errors in tiktoken calculation
+        # try:
+        #     max_out_len = min(
+        #         max_out_len,
+        #         context_window - self.get_token_len(str(input)) - 100)
+        # except KeyError:
+        #     max_out_len = max_out_len
+        # if max_out_len <= 0:
+        #     return ''
 
         max_num_retries = 0
         while max_num_retries < self.retry:
+            max_num_retries += 1
+
             self.wait()
 
             with Lock():
@@ -290,12 +292,13 @@ class MyModelAPI(BaseAPIModel):
                 #
                 #     self.logger.error('Find error message in response: ',
                 #                       str(response['error']))
-                return ""
-            max_num_retries += 1
-
-        raise RuntimeError('Calling OpenAI failed after retrying for '
-                           f'{max_num_retries} times. Check the logs for '
-                           'details.')
+                continue
+                # return ""
+            # max_num_retries += 1
+        return ""
+        # raise RuntimeError('Calling OpenAI failed after retrying for '
+        #                    f'{max_num_retries} times. Check the logs for '
+        #                   'details.')
 
 
     def bin_trim(self, prompt: str, num_token: int) -> str:
