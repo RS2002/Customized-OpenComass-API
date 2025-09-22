@@ -1,7 +1,6 @@
 # Customized OpenCompass API
 
-This repository provides an example of how to use a customized API model within OpenCompass. (This readme is provided by ChatGPT4o-mini.)
-
+This repository provides an example of how to use a customized API model within OpenCompass.
 ## Setup Instructions
 
 1. **Configure API Settings**
